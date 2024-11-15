@@ -13,118 +13,165 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User CRUD</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
         }
 
-        h2 {
-            text-align: center;
-            margin-top: 20px;
+        body {
+            background-color: #f0f2f5;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            margin-top: 20px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         table th, table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
 
         table th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         table tr:hover {
             background-color: #f1f1f1;
         }
 
+        .actions a {
+            padding: 6px 12px;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .actions .update {
+            background-color: #28a745;
+        }
+
+        .actions .delete {
+            background-color: #dc3545;
+            margin-left: 8px;
+        }
+
         form {
-            width: 300px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        form label {
+            font-size: 14px;
+            color: #555;
         }
 
         form input[type="text"], form input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
+            width: 100%;
+            font-size: 16px;
         }
 
         form input[type="submit"] {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #007bff;
+            color: #fff;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 0;
             border-radius: 4px;
+            font-size: 16px;
             cursor: pointer;
-            width: 100%;
+            transition: background-color 0.3s;
         }
 
         form input[type="submit"]:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <h2>CRUD Operations on Users</h2>
+    <h2>User Management</h2>
 
     <!-- Display Users -->
     <h3>Users List</h3>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-        <?php while($row = $result->fetch_assoc()) { ?>
-        <tr>
-            <td><?php echo $row['id']; ?></td>
-            <td><?php echo $row['name']; ?></td>
-            <td><?php echo $row['email']; ?></td>
-            <td>
-                <a href="update.php?id=<?php echo $row['id']; ?>" style="color: #4CAF50; text-decoration: none;">Update</a> | 
-                <a href="delete.php?id=<?php echo $row['id']; ?>" style="color: #F44336; text-decoration: none;">Delete</a>
-            </td>
-        </tr>
-        <?php } ?>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = $result->fetch_assoc()) { ?>
+                <tr>
+                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo $row['name']; ?></td>
+                    <td><?php echo $row['email']; ?></td>
+                    <td class="actions">
+                        <a href="update.php?id=<?php echo $row['id']; ?>" class="update">Update</a>
+                        <a href="delete.php?id=<?php echo $row['id']; ?>" class="delete">Delete</a>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 
     <!-- Create User Form -->
     <h3>Create New User</h3>
     <form method="POST" action="create.php">
-        Name: <input type="text" name="name" required><br>
-        Email: <input type="email" name="email" required><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
         <input type="submit" value="Create User">
     </form>
-
 </div>
 
 </body>
